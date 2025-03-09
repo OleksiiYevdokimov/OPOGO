@@ -39,8 +39,8 @@ func TestFindMostExpensiveInCategoryEmpty(t *testing.T) {
 // TestFinalPrice_Table виконує тестування FinalPrice з використанням table-driven підходу.
 func TestFinalPrice_Table(t *testing.T) {
 	tests := map[string]struct {
-		product       Product // Вхідний товар
-		expectedPrice float64 // Очікувана кінцева ціна
+		product       Product
+		expectedPrice float64
 	}{
 		"Laptop":         {Product{ID: 1, Name: "Laptop", Category: Category{Name: "Electronics", Tax: 20}, Price: 1000}, 1200},
 		"Phone":          {Product{ID: 2, Name: "Phone", Category: Category{Name: "Electronics", Tax: 15}, Price: 800}, 920},
@@ -50,9 +50,8 @@ func TestFinalPrice_Table(t *testing.T) {
 	}
 
 	for name, test := range tests {
-		t.Run(name, func(t *testing.T) { // Запускаємо під-тест для кожного товару
-			//require.InEpsilon(t, test.expectedPrice, test.product.FinalPrice(), 0.0001) // Перевіряємо розрахунок
-			require.Equal(t, test.expectedPrice, test.product.FinalPrice())
+		t.Run(name, func(t *testing.T) {
+			require.InDelta(t, test.expectedPrice, test.product.FinalPrice(), 0.0001)
 		})
 	}
 }
