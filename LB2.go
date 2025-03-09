@@ -20,7 +20,8 @@ type Product struct {
 
 // FinalPrice обчислює кінцеву вартість товару з урахуванням податку
 func (p Product) FinalPrice() float64 {
-	return p.Price * (1 + p.Category.Tax/100)
+	val := p.Price * (1 + p.Category.Tax/100)
+	return val
 }
 
 // FindMostExpensiveInCategory знаходить найдорожчий товар у вказаній категорії
@@ -57,9 +58,10 @@ func PrintMostExpensiveProduct(products []Product, categoryName string) {
 	mostExpensive := FindMostExpensiveInCategory(products, categoryName)
 	if mostExpensive != nil {
 		fmt.Printf("Найдорожчий товар у категорії %s: %s (Ціна з податком: %.2f)\n", categoryName, mostExpensive.Name, mostExpensive.FinalPrice())
-	} else {
-		fmt.Println("Товарів у цій категорії не знайдено.")
+		return
 	}
+	fmt.Println("Товарів у цій категорії не знайдено.")
+
 }
 
 func main() {
