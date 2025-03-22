@@ -2,6 +2,7 @@ package internal
 
 import (
 	"context"
+	"errors"
 	_ "github.com/google/uuid"
 )
 
@@ -11,6 +12,8 @@ type Storage interface {
 	CreateProduct(ctx context.Context, product Product) (int, error)
 	GetProduct(ctx context.Context, id int) (Product, error)
 }
+
+var ErrNotExist = errors.New("entity does not exist")
 
 // Category представляє категорію товару
 type Category struct {

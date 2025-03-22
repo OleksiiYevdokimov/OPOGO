@@ -2,6 +2,8 @@ package postgres
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 
 	"github.com/DenisGoldiner/webapp/internal"
@@ -32,6 +34,10 @@ func (c Client) GetCategory(ctx context.Context, id int) (internal.Category, err
 	query := `SELECT id, name, tax FROM categories WHERE id = $1`
 	var category internal.Category
 	err := c.db.GetContext(ctx, &category, query, id)
+	if errors.Is(err, sql.ErrNoRows) {
+		return internal.Category{}, fmt.Errorf("%w: %w", err, internal.ErrNotExist)
+	}
+
 	if err != nil {
 		return internal.Category{}, fmt.Errorf("не вдалося отримати категорію: %w", err)
 	}

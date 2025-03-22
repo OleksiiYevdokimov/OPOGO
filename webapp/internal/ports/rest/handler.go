@@ -2,6 +2,7 @@ package rest
 
 import (
 	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"strconv"
@@ -50,9 +51,15 @@ func (h Handler) GetCategory(w http.ResponseWriter, r *http.Request) {
 	}
 
 	category, err := h.service.GetCategory(r.Context(), id)
+	if errors.Is(err, internal.ErrNotExist) {
+		log.Printf("категорія відсутня: %v", err)
+		http.Error(w, "Категорію не знайдено", http.StatusNotFound)
+		return
+	}
+
 	if err != nil {
 		log.Printf("Помилка створення категорії: %v", err)
-		http.Error(w, "Категорію не знайдено", http.StatusNotFound)
+		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
 
