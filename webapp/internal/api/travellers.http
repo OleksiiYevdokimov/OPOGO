@@ -1,0 +1,24 @@
+### Отримати категорію за ID
+GET http://localhost:8081/api/v1/categories/1
+
+### Створити нову категорію
+POST http://localhost:8081/api/v1/categories
+Content-Type: application/json
+
+{
+  "name": "Electronics2",
+  "tax": 20.0
+}
+
+### Отримати товар за ID
+GET http://localhost:8081/api/v1/products/1
+
+### Створити новий товар
+POST http://localhost:8081/api/v1/categories
+Content-Type: application/json
+
+{
+  "name": "Electronics",
+  "tax": 20
+}
+
