@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"slices"
 	"strconv"
 
 	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal"
@@ -55,7 +56,11 @@ func (p Parser) parse(r *csv.Reader) ([]internal.Category, []internal.Product, e
 	var categories []internal.Category
 	var products []internal.Product
 
-	for i := 0; ; i++ {
+	if err := p.parseHeader(r); err != nil {
+		return nil, nil, err
+	}
+
+	for i := 1; ; i++ {
 		row, err := r.Read()
 		if err == io.EOF {
 			break
@@ -81,6 +86,25 @@ func (p Parser) parse(r *csv.Reader) ([]internal.Category, []internal.Product, e
 	}
 
 	return categories, products, nil
+}
+
+var supportedHeader = []string{"ID", "Product Name", "Category", "Price", "Tax"}
+
+func (p Parser) parseHeader(r *csv.Reader) error {
+	row, err := r.Read()
+	if err == io.EOF {
+		return fmt.Errorf("файл пустий %w", err)
+	}
+
+	if err != nil {
+		return fmt.Errorf("не вдалось прочитати хедер %w", err)
+	}
+
+	if !slices.Equal(row, supportedHeader) {
+		return fmt.Errorf("отриманий хедер не відповідає стандарту %#v", row)
+	}
+
+	return nil
 }
 
 func (p Parser) processCategories(ctx context.Context, categories []internal.Category) error {
