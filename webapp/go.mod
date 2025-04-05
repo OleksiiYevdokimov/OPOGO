@@ -1,4 +1,4 @@
-module github.com/DenisGoldiner/webapp
+module github.com/OleksiiYevdokimov/OPOGO/webapp
 
 go 1.23.6
 

@@ -7,6 +7,7 @@ import (
 
 	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal"
 	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal/adapters/postgres"
+	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal/ports/ftp"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 )
@@ -20,7 +21,7 @@ func BenchmarkProductsImport(b *testing.B) {
 	ctx := context.Background()
 
 	productsClient := postgres.NewClient(dbExec)
-	productsService := internal.NewProducts(productsClient)
+	productsService := internal.NewService(productsClient)
 	productsParser := ftp.NewParser(productsService)
 
 	b.ResetTimer()
@@ -32,7 +33,7 @@ func BenchmarkProductsImport(b *testing.B) {
 	}
 }
 
-func newDB() (sqlx.ExtContext, error) {
+func newDB() (*sqlx.DB, error) {
 	dsn := "postgres://postgres:postgres@localhost:5432/travellers?sslmode=disable"
 	conn, err := sqlx.Connect("postgres", dsn)
 	if err != nil {

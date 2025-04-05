@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/DenisGoldiner/webapp/internal"
+	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal"
 	"github.com/gorilla/mux"
 )
 

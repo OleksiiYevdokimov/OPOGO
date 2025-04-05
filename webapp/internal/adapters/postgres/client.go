@@ -6,7 +6,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/DenisGoldiner/webapp/internal"
+	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal"
 	"github.com/jmoiron/sqlx"
 )
 

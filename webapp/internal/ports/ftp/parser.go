@@ -1,4 +1,4 @@
-package csvimport
+package ftp
 
 import (
 	"bytes"
@@ -8,13 +8,15 @@ import (
 	"io"
 	"os"
 	"strconv"
+
+	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal"
 )
 
 type Parser struct {
-	service ports.Service
+	service internal.Service
 }
 
-func NewParser(service ports.Service) Parser {
+func NewParser(service internal.Service) Parser {
 	return Parser{service: service}
 }
 
@@ -49,9 +51,9 @@ func (p Parser) Run(ctx context.Context, filePath string) error {
 	return nil
 }
 
-func (p Parser) parse(r *csv.Reader) ([]ports.Category, []ports.Product, error) {
-	var categories []ports.Category
-	var products []ports.Product
+func (p Parser) parse(r *csv.Reader) ([]internal.Category, []internal.Product, error) {
+	var categories []internal.Category
+	var products []internal.Product
 
 	for i := 0; ; i++ {
 		row, err := r.Read()
@@ -69,7 +71,7 @@ func (p Parser) parse(r *csv.Reader) ([]ports.Category, []ports.Product, error) 
 				return nil, nil, fmt.Errorf("невірний формат податку %s у рядку #%d: %w", row[1], i, err)
 			}
 
-			category := ports.Category{
+			category := internal.Category{
 				Name: row[0],
 				Tax:  tax,
 			}
@@ -86,7 +88,7 @@ func (p Parser) parse(r *csv.Reader) ([]ports.Category, []ports.Product, error) 
 				return nil, nil, fmt.Errorf("невірний формат ціни %s у рядку #%d: %w", row[2], i, err)
 			}
 
-			product := ports.Product{
+			product := internal.Product{
 				Name:       row[0],
 				CategoryID: categoryID,
 				Price:      price,
@@ -101,7 +103,7 @@ func (p Parser) parse(r *csv.Reader) ([]ports.Category, []ports.Product, error) 
 	return categories, products, nil
 }
 
-func (p Parser) processCategories(ctx context.Context, categories []ports.Category) error {
+func (p Parser) processCategories(ctx context.Context, categories []internal.Category) error {
 	for _, category := range categories {
 		if _, err := p.service.CreateCategory(ctx, category); err != nil {
 			return fmt.Errorf("не вдалося створити категорію %s: %w", category.Name, err)
@@ -110,7 +112,7 @@ func (p Parser) processCategories(ctx context.Context, categories []ports.Catego
 	return nil
 }
 
-func (p Parser) processProducts(ctx context.Context, products []ports.Product) error {
+func (p Parser) processProducts(ctx context.Context, products []internal.Product) error {
 	for _, product := range products {
 		if _, err := p.service.CreateProduct(ctx, product); err != nil {
 			return fmt.Errorf("не вдалося створити товар %s: %w", product.Name, err)
