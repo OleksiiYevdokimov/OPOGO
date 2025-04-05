@@ -8,9 +8,9 @@ import (
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq"
 
-	"github.com/DenisGoldiner/webapp/internal/adapters/postgres"
-	"github.com/DenisGoldiner/webapp/internal/ports/rest"
 	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal"
+	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal/adapters/postgres"
+	"github.com/OleksiiYevdokimov/OPOGO/webapp/internal/ports/rest"
 )
 
 func main() {
