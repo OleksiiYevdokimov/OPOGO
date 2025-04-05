@@ -27,14 +27,14 @@ func BenchmarkProductsImport(b *testing.B) {
 	b.ResetTimer()
 
 	for i := 0; i < b.N; i++ {
-		if err = productsParser.Run(ctx, "/Users/denys/Go/src/github.com/DenisGoldiner/webapp/internal/integration/data/products.csv"); err != nil {
+		if err = productsParser.Run(ctx, `D:\GO\src\github.com\OleksiiYevdokimov\OPOGO\webapp\internal\integration\data\products.csv`); err != nil {
 			b.Fatalf("unexpected error: %v", err)
 		}
 	}
 }
 
 func newDB() (*sqlx.DB, error) {
-	dsn := "postgres://postgres:postgres@localhost:5432/travellers?sslmode=disable"
+	dsn := "postgres://postgres:12345678@localhost:5432/postgres?sslmode=disable&search_path=shop"
 	conn, err := sqlx.Connect("postgres", dsn)
 	if err != nil {
 		return nil, err
