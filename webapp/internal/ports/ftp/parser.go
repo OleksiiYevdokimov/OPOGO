@@ -65,39 +65,19 @@ func (p Parser) parse(r *csv.Reader) ([]internal.Category, []internal.Product, e
 		}
 
 		// Якщо 2 колонки → це категорія
-		if len(row) == 2 {
-			tax, err := strconv.ParseFloat(row[1], 64)
-			if err != nil {
-				return nil, nil, fmt.Errorf("невірний формат податку %s у рядку #%d: %w", row[1], i, err)
-			}
-
-			category := internal.Category{
-				Name: row[0],
-				Tax:  tax,
-			}
-			categories = append(categories, category)
-
-		} else if len(row) == 3 { // Якщо 3 колонки → це товар
-			categoryID, err := strconv.Atoi(row[1])
-			if err != nil {
-				return nil, nil, fmt.Errorf("невірний формат category_id %s у рядку #%d: %w", row[1], i, err)
-			}
-
-			price, err := strconv.ParseFloat(row[2], 64)
-			if err != nil {
-				return nil, nil, fmt.Errorf("невірний формат ціни %s у рядку #%d: %w", row[2], i, err)
-			}
-
-			product := internal.Product{
-				Name:       row[0],
-				CategoryID: categoryID,
-				Price:      price,
-			}
-			products = append(products, product)
-
-		} else {
+		if len(row) != 5 {
 			return nil, nil, fmt.Errorf("невідомий формат у рядку #%d", i)
 		}
+		tax, err := strconv.ParseFloat(row[4], 64)
+		if err != nil {
+			return nil, nil, fmt.Errorf("некоректний формат податку #%d, значення = %q", i, row[4])
+		}
+
+		category := internal.Category{
+			Name: row[0],
+			Tax:  tax,
+		}
+		categories = append(categories, category)
 	}
 
 	return categories, products, nil
